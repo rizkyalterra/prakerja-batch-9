@@ -1,4 +1,4 @@
-ini dari branch develop
+ini dari branch featureA
 
 Perkenalkan saya Rizky
 Ini perubahan dari dev B - git clone
