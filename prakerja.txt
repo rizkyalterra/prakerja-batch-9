@@ -1,3 +1,4 @@
 Perkenalkan saya Rizky
 Ini perubahan dari dev B - git clone
 Ini perubahan dari dev B juga
+Ini perubahan dari dev A - git remote add
