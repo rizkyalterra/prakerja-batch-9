@@ -1,9 +1,12 @@
 package main
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	_ "github.com/go-sql-driver/mysql"
+
 )
 
 type BaseResponse struct {
@@ -17,12 +20,60 @@ type News struct {
 	Content string 		`json:"content"`
 }
 
+type User struct {
+	Id int
+	PhotoUrl string
+	UserName string
+	FullName string
+}
+
 func main(){
+	initDatabase()
 	e := echo.New()
+	e.GET("/users", GetUsersController)
 	e.GET("/news", GetNewsController)
 	e.POST("/news", AddNewsController)
 	e.GET("/news/:id", GetDetailNewsController)
 	e.Start(":8000")
+}
+
+var DB *sql.DB
+
+func initDatabase() {
+	var err error
+	DB, err = sql.Open("mysql", "root:123ABC4d.@tcp(localhost:3306)/prakerja9")
+	if err != nil {
+		panic("Gagal konek ke database")
+	}
+	// defer DB.Close()
+}
+
+func GetUsersController(c echo.Context) error {
+	var users []User
+
+	// database
+	query := "SELECT * FROM user"
+	rows, err := DB.Query(query)
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var user User
+		if err := rows.Scan(&user.Id, &user.PhotoUrl, &user.UserName, &user.FullName); err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Internal Server Error"})
+		}
+		users = append(users, user)
+	}
+
+	return c.JSON(http.StatusOK, BaseResponse{
+		Status: true,
+		Message: "Berhasil get data",
+		Data: users,
+	})
 }
 
 func AddNewsController(c echo.Context) error {
@@ -52,6 +103,10 @@ func GetNewsController(c echo.Context) error {
 	
 	
 	var data []News
+
+	// select * from news
+	// orm
+
 
 	// dummy
 	data = append(data, News{"A", "A"})
