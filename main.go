@@ -30,6 +30,7 @@ type User struct {
 func main(){
 	initDatabase()
 	e := echo.New()
+	defer DB.Close()
 	e.GET("/users", GetUsersController)
 	e.GET("/news", GetNewsController)
 	e.POST("/news", AddNewsController)
