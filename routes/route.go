@@ -2,9 +2,11 @@ package routes
 
 import (
 	"km5go/controllers"
+	"os"
+
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/labstack/echo-jwt/v4"
 )
 
 func InitRoute(e *echo.Echo) {
@@ -12,7 +14,7 @@ func InitRoute(e *echo.Echo) {
 	e.POST("/login", controllers.LoginController)
 
 	eAuth := e.Group("")
-	eAuth.Use(echojwt.JWT([]byte("1234")))
+	eAuth.Use(echojwt.JWT([]byte(os.Getenv("PRIVATE_KEY_JWT"))))
 
 	eLog := eAuth.Group("")
 	eLog.Use(middleware.Logger())
