@@ -1,9 +1,9 @@
 package models
 
-type User struct {
+type UserResponse struct {
 	Id int `json:"id"`
 	PhotoUrl string `json:"photoUrl"`
 	UserName string `json:"userName"`
 	FullName string `json:"fullName"`
-	Password string `json:"password"`
+	Token string `json:"token"`
 }
